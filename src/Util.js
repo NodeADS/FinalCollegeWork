@@ -43,13 +43,7 @@ class Util {
   }
 
   static stringToDate(str) {
-    debugger;//errro
-    return moment("2014-02-27T10:00:00").format('DD-MM-YYYY')
-    const parts = str.split(' ');
-    const date = parts[0].split('/');
-    const dateStr = `${date[1]}/${date[0]}/${date[2]} ${parts[1]}`;
-    console.log(dateStr);
-    return new Date(dateStr);
+    return moment(str, 'DD-MM-YYYY hh:mm').toDate();
   }
 
   static dateDay(str) {
@@ -58,7 +52,7 @@ class Util {
   }
 
   static diferenceDates(min, max) {
-    const diffMs = (min - max);
+    const diffMs = (max - min);
     return Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
   }
 

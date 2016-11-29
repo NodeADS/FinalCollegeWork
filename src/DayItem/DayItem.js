@@ -10,8 +10,6 @@ class DayItem extends Component {
     const atendimento = util.filerSortAndFormat(json, 'dataAtendimento');
     const conclusao = util.filerSortAndFormat(json, 'dataConclusao');
 
-    console.log(this.props.name, JSON.stringify(chegada));
-
     return (
       <Col s={12} m={12}>
           <CardPanel>
