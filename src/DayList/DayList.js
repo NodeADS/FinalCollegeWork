@@ -13,11 +13,9 @@ class DayList extends Component {
 	     );
   	});
 
-    console.log(divs);
-
     return (
       <Row>
-        {divs}
+        {divs[0]}
       </Row>
     );
   }

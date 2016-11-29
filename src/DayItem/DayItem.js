@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Col, CardPanel } from 'react-materialize';
+import { Row, Col, CardPanel, Badge } from 'react-materialize';
 import CalcInfo from '../CalcInfo/CalcInfo';
 import util from '../Util';
 
@@ -10,22 +10,27 @@ class DayItem extends Component {
     const atendimento = util.filerSortAndFormat(json, 'dataAtendimento');
     const conclusao = util.filerSortAndFormat(json, 'dataConclusao');
 
+    console.log(this.props.name, JSON.stringify(chegada));
+
     return (
-      <Col s={12} m={2}>
+      <Col s={12} m={12}>
           <CardPanel>
               <span>{this.props.day}</span>
+              <Badge>{json.length}</Badge>
           </CardPanel>
-          <CalcInfo
-            name='Chegada'
-            data={chegada}/>
+          <Row>
+            <CalcInfo
+              name='Chegada'
+              data={chegada}/>
 
-          <CalcInfo
-            name='Atendimento'
-            data={atendimento}/>
+            <CalcInfo
+              name='Atendimento'
+              data={atendimento}/>
 
-          <CalcInfo
-            name='Conclusao'
-            data={conclusao}/>
+            <CalcInfo
+              name='Conclusao'
+              data={conclusao}/>
+          </Row>
       </Col>
     );
   }
