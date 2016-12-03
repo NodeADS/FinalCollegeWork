@@ -10,6 +10,41 @@ class Util {
     return groupArray(array, 'data');
   }
 
+  static splitByPosto(array) {
+    array.forEach(item => {
+      item.data = Util.dateDay(item.dataChegada);
+    });
+
+    return groupArray(array, 'posto');
+  }
+
+  static splitByDayAtend(array) {
+    array.forEach(item => {
+      item.data = Util.dateDay(item.dataChegada);
+    });
+
+    return groupArray(array, 'data', 'posto');
+  }
+
+  static postoAvagAtend(array) {
+    const list = array.map(item => {
+      item.beginDate = Util.stringToDate(item.dataAtendimento);
+      item.endDate = Util.stringToDate(item.dataConclusao);
+
+      return item;
+    }).filter(item => {
+      return item.beginDate <= item.endDate;
+    }).map(item => Util.diferenceDates(item.beginDate, item.endDate));
+
+    const average = Util.getAverage(list);
+    const variance = Util.getVariance(list, average);
+
+    return {
+      average,
+      variance
+    }
+  }
+
   static filerSortAndFormat(array, prop) {
     const temp = array.map(o => ({
       id: o.id,
@@ -66,7 +101,7 @@ class Util {
       , greatestFreq = -1
       , mode;
 
-    itens.map((item) => {
+    itens.forEach((item) => {
       if (dict[item]) {
         dict[item] = dict[item] + 1;
       } else {
@@ -93,6 +128,12 @@ class Util {
   static getMedian(itens) {
     itens = itens.map((v) => Math.round(v));
     let middle = Math.floor(itens.length / 2);
+    return itens[middle];
+  }
+
+  static getQuartile1(itens) {
+    itens = itens.map((v) => Math.round(v));
+    let middle = Math.floor(itens.length / 4);
     return itens[middle];
   }
 
