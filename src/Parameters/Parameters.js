@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Button, Input } from 'react-materialize';
+import { Row, Button, Input, ProgressBar } from 'react-materialize';
 import util from '../Util';
 import j from '../../data.json';
 
@@ -10,7 +10,8 @@ class Parameters extends Component {
       text: JSON.stringify(j),
       data: j,
       atendNormal: '',
-      atendTop: ''
+      atendTop: '',
+      processing: false
     }
 
     this.dataChange = this.dataChange.bind(this);
@@ -44,10 +45,38 @@ class Parameters extends Component {
     });
   }
 
+  validNumber(n) {
+    var number = parseInt(n);
+
+    return number !== NaN && number >= 0;
+  }
+
   clickedBtn() {
+    if (!this.validNumber(this.state.atendNormal)) {
+      alert('Número Atendente inválido!');
+      return;
+    }
+    if (!this.validNumber(this.state.atendTop)) {
+      alert('Número Atendente Especializado inválido!');
+      return;
+    }
+
+    this.setState({
+      processing: true
+    });
+
     const json = this.state.data;
     const days = util.splitByDay(json);
     const list = util.splitByPosto(json);
+
+    const arrivals = Object.keys(days).map(key => {
+      const day = days[key];
+      return util.listClients(day);
+    })
+    .reduce((p, c) => {
+      p = p.concat(c);
+      return p;
+    },[]);
 
     const temp = Object.keys(list).map(key => {
       const atends = list[key];
@@ -64,6 +93,19 @@ class Parameters extends Component {
     this.props.onChangeNormalAtend(normal);
     this.props.onChangeTopAtend(top);
     this.props.onChangeDay(days);
+    this.props.onProcess(
+      arrivals,
+      normal,
+      parseInt(this.state.atendNormal),
+      top,
+      parseInt(this.state.atendTop),
+      () => {
+
+        this.setState({
+          processing: false
+        });
+      }
+    );
   }
 
   render() {
@@ -85,7 +127,11 @@ class Parameters extends Component {
             value={this.state.atendTop}
             onChange={this.atendTopChange} />
 
-          <Button onClick={this.clickedBtn}>Processar</Button>
+          {
+            this.state.processing
+            ? <ProgressBar />
+            : <Button onClick={this.clickedBtn}>Processar</Button>
+          }
       </Row>
     );
   }

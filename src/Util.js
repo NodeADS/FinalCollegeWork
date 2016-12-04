@@ -26,6 +26,32 @@ class Util {
     return groupArray(array, 'data', 'posto');
   }
 
+  static listClients(array) {
+    let last;
+
+    return array.map(item => {
+      item.beginDate = Util.stringToDate(item.dataAtendimento);
+      item.endDate = Util.stringToDate(item.dataConclusao);
+      item.arrival = Util.stringToDate(item.dataChegada);
+
+      return item;
+    })
+    .sort((a, b) => a.arrival - b.arrival)
+    .map(item => {
+      var i = {
+        arrival: last ? Util.diferenceDates(last.arrival, item.arrival) : 0,
+        delay: Util.diferenceDates(item.beginDate, item.endDate)
+      };
+
+      if (i.delay < 0) {
+        i.delay = 0;
+      }
+
+      last = item;
+      return i;
+    });
+  }
+
   static postoAvagAtend(array) {
     const list = array.map(item => {
       item.beginDate = Util.stringToDate(item.dataAtendimento);
