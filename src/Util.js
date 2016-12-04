@@ -64,10 +64,12 @@ class Util {
 
     const average = Util.getAverage(list);
     const variance = Util.getVariance(list, average);
+    const deviation = Util.getDeviation(variance);
 
     return {
       average,
-      variance
+      variance,
+      deviation
     }
   }
 
