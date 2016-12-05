@@ -35,7 +35,7 @@ class ResultList extends Component {
               </Col>
               <Col s={6} m={6}>
                 <p>Tempo médio para conclusão: {Math.round(item.avgComplete * 100) / 100}</p>
-                <p>Tempo médio na fila: {item.avgInQuere}</p>
+                <p>Tempo médio na fila: {Math.round(item.avgInQuere * 100) / 100}</p>
                 <p>Maior fila: {item.maxInQueue}</p>
               </Col>
             </Row>
