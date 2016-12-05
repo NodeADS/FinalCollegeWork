@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Collection, CollectionItem } from 'react-materialize';
+import { Collection, CollectionItem, Collapsible, CollapsibleItem, Row, Col, CardPanel, Card } from 'react-materialize';
+import AtendInfo from '../AtendInfo/AtendInfo';
+import moment from 'moment';
 
 class ResultList extends Component {
   constructor(props) {
@@ -10,34 +12,59 @@ class ResultList extends Component {
     const divs = this.props.data
     .sort((a, b) => b.date - a.date)
     .map((item, i) => {
-      const busyNormal = item.normaAtendBusy.map((obj, i) => (
-        <p key={i.toString()}>Atendente Normal {obj.atend} atendeu em {Math.round(obj.busy * 10000) / 100}% do seu tempo</p>
-      ));
-      const busytop = item.topAtendBusy.map((obj, i) => (
-        <p key={i.toString()}>Atendente Especializado {obj.atend} atendeu em {Math.round(obj.busy * 10000) / 100}% do seu tempo</p>
-      ));
-      
       return (
-        <CollectionItem key={i.toString()}>
-          <h6>Informações de atendimentos</h6>
-          <p>Atendentes Normais: {item.normalNumber} / Atendentes Especializados: {item.topNumber}</p>
-          <p>Tempo total em milisegundos: {item.time}</p>
-          <p>Tempo máximo para conclusão: {item.timeToComplete}</p>
-          <p>Tempo máximo na fila: {item.timeInQueue}</p>
-          <p>Tempo médio para conclusão: {item.avgComplete}</p>
-          <p>Tempo médio na fila: {item.avgInQuere}</p>
-          <p>Maior fila: {item.maxInQueue}</p>
-          <b>Informações sobre os atendentes</b>
-          {busytop}
-          {busyNormal}
-        </CollectionItem>
+        <Col s={4} m={4}
+          key={i.toString()}>
+
+          <Card title={`Gerado às ${moment(item.end).format("HH:mm:ss")}`}>
+            <Row>
+              <p><b>Parâmetros</b></p>
+              <Col s={6} m={6}>
+                <p>Atendentes Normais: {item.normalNumber}</p>
+              </Col>
+              <Col s={6} m={6}>
+                <p>Atendentes Especializados: {item.topNumber}</p>
+              </Col>
+            </Row>
+            <Row>
+              <p><b>Métricas</b></p>
+              <Col s={6} m={6}>
+                <p>Tempo total em milisegundos: {item.time}</p>
+                <p>Tempo máximo para conclusão: {item.timeToComplete}</p>
+                <p>Tempo máximo na fila: {item.timeInQueue}</p>
+              </Col>
+              <Col s={6} m={6}>
+                <p>Tempo médio para conclusão: {Math.round(item.avgComplete * 100) / 100}</p>
+                <p>Tempo médio na fila: {item.avgInQuere}</p>
+                <p>Maior fila: {item.maxInQueue}</p>
+              </Col>
+            </Row>
+
+            <p><b>Informações sobre os atendentes</b></p>
+
+            <Collapsible>
+              <AtendInfo
+                name='Atendentes Especializados'
+                data={item.topInfo}/>
+
+              <AtendInfo
+                name='Atendentes Normais'
+                data={item.normaInfo}/>
+            </Collapsible>
+          </Card>
+        </Col>
       );
     });
 
+    if (this.props.data.length == 0) return null;
+
     return (
-      <Collection>
-        {divs}
-      </Collection>
+      <div>
+        <h5><b>Resultados</b></h5>
+        <Row>
+          {divs}
+        </Row>
+      </div>
     );
   }
 }

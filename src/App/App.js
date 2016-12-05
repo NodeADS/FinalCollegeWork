@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-materialize';
+import { Row, Col, CardPanel } from 'react-materialize';
 import Parameters from '../Parameters/Parameters';
 import './App.css';
 import util from '../Util';
@@ -33,11 +33,13 @@ class App extends Component {
   onChangeNormalAtend(list) {
     this.setState({
       normal: (
-        <Col s={4} m={4}>
-          <h6>Atendente Normal</h6>
-          <p>Média: {util.getAverage(list.map(i => i.average))}</p>
-          <p>Variância: {util.getAverage(list.map(i => i.variance))}</p>
-          <p>Desvio Padrão: {util.getAverage(list.map(i => i.deviation))}</p>
+        <Col s={3} m={3}>
+          <CardPanel>
+            <h6><b>Atendente Normal</b></h6>
+            <p>Média: {util.getAverage(list.map(i => i.average))}</p>
+            <p>Variância: {util.getAverage(list.map(i => i.variance))}</p>
+            <p>Desvio Padrão: {util.getAverage(list.map(i => i.deviation))}</p>
+          </CardPanel>
         </Col>
       )
     });
@@ -46,11 +48,13 @@ class App extends Component {
   onChangeTopAtend(list) {
     this.setState({
       top: (
-        <Col s={4} m={4}>
-          <h6>Atendente Especializado</h6>
-          <p>Média: {util.getAverage(list.map(i => i.average))}</p>
-          <p>Variância: {util.getAverage(list.map(i => i.variance))}</p>
-          <p>Desvio Padrão: {util.getAverage(list.map(i => i.deviation))}</p>
+        <Col s={3} m={3}>
+          <CardPanel>
+            <h6><b>Atendente Especializado</b></h6>
+            <p>Média: {util.getAverage(list.map(i => i.average))}</p>
+            <p>Variância: {util.getAverage(list.map(i => i.variance))}</p>
+            <p>Desvio Padrão: {util.getAverage(list.map(i => i.deviation))}</p>
+          </CardPanel>
         </Col>
       )
     });
@@ -82,8 +86,8 @@ class App extends Component {
         const timeInQueue = manager.itemMostTimeInQueue.timeInQueue;
         const avgComplete = util.getAverage(clientsInfo.map(i => i.timeToComplete));;
         const avgInQuere = util.getAverage(clientsInfo.map(i => i.timeInQueue));;
-        const normaAtendBusy = normalExec.getBusyPercent(end);
-        const topAtendBusy = topExec.getBusyPercent(end);
+        const normaInfo = normalExec.getInfo(end);
+        const topInfo = topExec.getInfo(end);
         let resultList = this.state.resultList;
 
         resultList.push({
@@ -95,8 +99,8 @@ class App extends Component {
           avgComplete,
           avgInQuere,
           maxInQueue,
-          normaAtendBusy,
-          topAtendBusy,
+          normaInfo,
+          topInfo,
           infoNormalExec: normalExec.processesInfo,
           infoTopExec: topExec.processesInfo,
           begin,

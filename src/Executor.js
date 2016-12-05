@@ -48,7 +48,7 @@ class Executor {
     }
   }
 
-  getBusyPercent(endDate) {
+  getInfo(endDate) {
     return this.processesInfo.map((item, i) => {
       const create = item.create;
       const total = endDate - create;
@@ -58,6 +58,7 @@ class Executor {
 
       return {
         atend: i,
+        clients: item.logs.length,
         busy: work / total
       };
     });

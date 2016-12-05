@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Button, Input } from 'react-materialize';
-import util from '../Util';
-import times from '../Times';
+import { CollapsibleItem, Table } from 'react-materialize';
+import './AtendInfo.css';
 
 class AtendInfo extends Component {
   constructor(props) {
@@ -9,8 +8,20 @@ class AtendInfo extends Component {
   }
 
   render() {
+    const list = this.props.data.map((obj, i) => (
+      <li
+        className='atendente-info'
+        key={i.toString()}>
+        Atendente <b>{obj.atend}</b> atendeu em <b>{Math.round(obj.busy * 10000) / 100}%</b> do seu tempo <b>{obj.clients}</b> clientes
+      </li>
+    ));
+
     return (
-      <span>aa</span>
+      <CollapsibleItem header={this.props.name}>
+        {this.props.data.length > 0
+          ? <ul>{list}</ul>
+        : <span className='atendente-info'>Sem atendentes</span>}
+      </CollapsibleItem>
     );
   }
 }
