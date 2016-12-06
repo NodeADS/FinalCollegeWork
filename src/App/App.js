@@ -105,6 +105,7 @@ class App extends Component {
           infoTopExec: topExec.processesInfo,
           begin,
           end,
+          clients: list,
           time: end - begin
         });
 

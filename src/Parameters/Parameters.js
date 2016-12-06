@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import { Row, Button, Input, ProgressBar } from 'react-materialize';
 import util from '../Util';
 import j from '../../data.json';
+import store from 'store';
 
 class Parameters extends Component {
   constructor(props) {
     super(props);
+    const json = store.get('JSON') || j;
+
     this.state = {
-      text: JSON.stringify(j),
-      data: j,
-      atendNormal: '',
-      atendTop: '',
+      text: JSON.stringify(json),
+      data: json,
+      atendNormal: store.get('ATEND_NORMAL'),
+      atendTop: store.get('ATEND_TOP'),
       processing: false
     }
 
@@ -25,6 +28,7 @@ class Parameters extends Component {
 
     try {
       json = JSON.parse(e.target.value);
+      store.set('JSON', json);
     } catch (e) { }
 
     this.setState({
@@ -34,12 +38,14 @@ class Parameters extends Component {
   }
 
   atendNormalChange(e) {
+    store.set('ATEND_NORMAL', e.target.value);
     this.setState({
       atendNormal: e.target.value
     });
   }
 
   atendTopChange(e) {
+    store.set('ATEND_TOP', e.target.value);
     this.setState({
       atendTop: e.target.value
     });
@@ -58,6 +64,10 @@ class Parameters extends Component {
     }
     if (!this.validNumber(this.state.atendTop)) {
       alert('Número Atendente Especializado inválido!');
+      return;
+    }
+    if (parseInt(this.state.atendTop) === 0 && parseInt(this.state.atendNormal) === 0) {
+      alert('Número de atendentes tem que ser maior que 0!');
       return;
     }
 
@@ -119,12 +129,12 @@ class Parameters extends Component {
 
         <Input s={6}
           label="Atend. Normal"
-          value={this.state.atendNormal}
+          defaultValue={this.state.atendNormal}
           onChange={this.atendNormalChange} />
 
           <Input s={6}
             label="Atend. Especializado"
-            value={this.state.atendTop}
+            defaultValue={this.state.atendTop}
             onChange={this.atendTopChange} />
 
           {
