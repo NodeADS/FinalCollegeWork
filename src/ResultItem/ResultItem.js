@@ -2,40 +2,63 @@ import React, { Component } from 'react';
 import { Collapsible, Row, Col, Card } from 'react-materialize';
 import AtendInfo from '../AtendInfo/AtendInfo';
 import moment from 'moment';
-// import { Line } from 'react-chartjs';
-// import groupArray from 'group-array';
+import { Line } from 'react-chartjs';
+import groupArray from 'group-array';
 
 class ResultItem extends Component {
   constructor(props) {
     super(props);
   }
 
+  createDataQueue(array) {
+    const dates = array.map(x => ({
+      date: moment(x.date).format('mm:ss:SS'),
+      size: x.size
+    }));
+    const grouped = groupArray(dates, 'date');
+    const keys = Object.keys(grouped);
+
+    const temp = keys.map(key => {
+      return grouped[key].reduce((p, c)  => p + c.size, 0);
+    });
+
+    return  {
+        labels: keys.map(_ => ""),
+        datasets: [{
+            data: temp
+        }]
+    };
+  }
+
+  createDataArrival(array) {
+    console.log(array);
+    const dates = array.map(x => ({
+      date: moment(x.processDate).format('mm:ss:SS'),
+      size: x.size
+    }));
+    const grouped = groupArray(dates, 'date');
+    const keys = Object.keys(grouped);
+
+    const temp = keys.map(key => {
+      return grouped[key].reduce((p, c)  => p + c.size, 0);
+    });
+    const lengths = keys.map(key => grouped[key].length);
+    return {
+        labels: keys.map(_ => ""),
+        datasets: [{
+            data: lengths
+        }]
+    };
+  }
+
   render() {
     const item = this.props.data;
-    // const aa = item.clients.map(x => {
-    //   console.log(x.processDate);
-    //   return {
-    //     data: moment(x.processDate).format('DD/MM/YYYY HH:mm'),
-    //     count: 1
-    //   };
-    // });
-    // const bb = groupArray(aa, 'data');
-    // const data = {
-    //     labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    //     datasets: [{
-    //         label: '# of Votes',
-    //         data: [12, 19, 3, 5, 2, 3]
-    //     }]
-    // };
-    // const opts = {
-    //   responsive: false
-    // };
-    // const a = item.clients.map(x => x.processDate);
-    // console.log(aa);
-    //<Line data={data} options={opts} />
-    return (
-      <Col s={4} m={4}>
 
+    const opts = {
+      responsive: true
+    };
+    return (
+      <Col s={6} m={6}>
         <Card title={`Gerado às ${moment(item.end).format("HH:mm:ss")}`}>
           <Row>
             <p><b>Parâmetros</b></p>
@@ -71,6 +94,14 @@ class ResultItem extends Component {
               name='Atendentes Normais'
               data={item.normaInfo}/>
           </Collapsible>
+
+          <p><b>Gráficos</b></p>
+
+          <h6>Tamanho da fila</h6>
+          <Line data={this.createDataQueue(item.queueLogs)}  options={opts} />
+
+          <h6>Números de clientes que chegaram</h6>
+          <Line data={this.createDataArrival(item.clients)} options={opts} />
         </Card>
       </Col>
     );

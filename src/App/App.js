@@ -81,6 +81,7 @@ class App extends Component {
       completed++;
       if (completed == list.length) {
         const end = new Date();
+        const queueLogs = manager.queueLogs;
         const maxInQueue = manager.maxInQueue;
         const timeToComplete = manager.itemMostDelayed.timeToComplete;
         const timeInQueue = manager.itemMostTimeInQueue.timeInQueue;
@@ -105,6 +106,7 @@ class App extends Component {
           infoTopExec: topExec.processesInfo,
           begin,
           end,
+          queueLogs,
           clients: list,
           time: end - begin
         });

@@ -25,7 +25,7 @@ class ResultList extends Component {
     return (
       <div>
         <h5><b>Resultados</b></h5>
-        <h6>* Todos os valores das métricas são em <b>segundos</b>.</h6>
+        <h6>* Todos os valores das métricas são em <b>minutos</b>.</h6>
         <Row>
           {divs}
         </Row>

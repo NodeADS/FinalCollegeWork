@@ -6,6 +6,7 @@ class Manager {
     this.itemMostDelayed = null;
     this.itemMostTimeInQueue = null;
     this.maxInQueue = 0;
+    this.queueLogs = [];
 
     this.doIt = this.doIt.bind(this);
   }
@@ -19,6 +20,7 @@ class Manager {
     } else {
       this.addQueue(client);
     }
+    this.addQuereLog();
   }
 
   doIt(client, exec) {
@@ -40,6 +42,7 @@ class Manager {
       if (newClient) {
         this.doIt(newClient, exec);
       }
+      this.addQuereLog();
     })
   }
 
@@ -60,6 +63,13 @@ class Manager {
         return exec;
       }
     }
+  }
+
+  addQuereLog() {
+    this.queueLogs.push({
+      date: new Date(),
+      size: this.queue.length
+    });
   }
 
   calclMaxInQueue() {
