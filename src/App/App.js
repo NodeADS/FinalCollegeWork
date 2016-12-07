@@ -15,13 +15,29 @@ class App extends Component {
       days: [],
       normal: null,
       top: null,
-      resultList: []
+      resultList: [],
+      random: true,
+      graph: false
     }
 
     this.onChangeNormalAtend = this.onChangeNormalAtend.bind(this);
     this.onChangeTopAtend = this.onChangeTopAtend.bind(this);
     this.onChangeDay = this.onChangeDay.bind(this);
     this.onProcess = this.onProcess.bind(this);
+    this.onRandomChange = this.onRandomChange.bind(this);
+    this.onGraphChange = this.onGraphChange.bind(this);
+  }
+
+  onRandomChange(check) {
+    this.setState({
+      random: check
+    });
+  }
+
+  onGraphChange(check) {
+    this.setState({
+      graph: check
+    });
   }
 
   onChangeDay(days) {
@@ -63,14 +79,16 @@ class App extends Component {
   onProcess(list, normal, normalNumber, top, topNumber, callback) {
     const begin = new Date();
     const weight = 1;
+    const random = this.state.random;
     const normalAvg = util.getAverage(normal.map(i => i.average));
     const normalVar = util.getAverage(normal.map(i => i.variance));
     const normalDev = util.getAverage(normal.map(i => i.deviation));
     const topAvg = util.getAverage(top.map(i => i.average));
     const topVar = util.getAverage(top.map(i => i.variance));
     const topDev = util.getAverage(top.map(i => i.deviation));
-    const normalExec = new Executor(normalNumber, weight, ((normalVar * weight) / normalAvg), ((normalDev * weight) / normalAvg));
-    const topExec = new Executor(topNumber, ((topAvg * weight) / normalAvg), ((topVar * weight) / normalAvg), ((topDev * weight) / normalAvg));
+
+    const normalExec = new Executor(normalNumber, weight, ((normalVar * weight) / normalAvg), ((normalDev * weight) / normalAvg), random);
+    const topExec = new Executor(topNumber, ((topAvg * weight) / normalAvg), ((topVar * weight) / normalAvg), ((topDev * weight) / normalAvg), random);
     let arr = 0;
     let lastIndex = list.length - 1;
     let completed = 0;
@@ -107,6 +125,7 @@ class App extends Component {
           begin,
           end,
           queueLogs,
+          random,
           clients: list,
           time: end - begin
         });
@@ -137,14 +156,17 @@ class App extends Component {
           onChangeDay={this.onChangeDay}
           onChangeNormalAtend={this.onChangeNormalAtend}
           onChangeTopAtend={this.onChangeTopAtend}
-          onProcess={this.onProcess} />
+          onProcess={this.onProcess}
+          randomChange={this.onRandomChange}
+          graphChange={this.onGraphChange} />
 
         <Row>
           {this.state.normal}
           {this.state.top}
         </Row>
         <ResultList
-          data={this.state.resultList}/>
+          data={this.state.resultList}
+          showGraph={this.state.graph}/>
       </div>
     );
   }

@@ -15,7 +15,8 @@ class ResultList extends Component {
       return (
         <ResultItem
           key={i.toString()}
-          data={item}/>
+          data={item}
+          showGraph={this.props.showGraph}/>
       );
     });
 

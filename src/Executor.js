@@ -1,11 +1,12 @@
 import rn from 'random-number';
 
 class Executor {
-  constructor(numbers, timeProcess, variance, deviation) {
+  constructor(numbers, timeProcess, variance, deviation, random) {
     this.numbers = numbers;
     this.timeProcess = timeProcess;
     this.variance = variance;
     this.deviation = deviation;
+    this.random = random;
     this.processes = Array.apply(null, Array(numbers));
     this.processesInfo = Array.apply(null, Array(numbers)).map(() => ({
       create: new Date(),
@@ -30,15 +31,18 @@ class Executor {
 
   getTimeDelay(client) {
     const time = client.delay * this.timeProcess;
-    const devPostive = this.timeProcess + this.deviation;
-    const devNegative = ((this.timeProcess - this.deviation) < 0) ? 0 : (this.timeProcess - this.deviation);
 
-    const gen = rn.generator({
-      min:  devNegative,
-      max:  devPostive
-    });
+    if (this.random) {
+      const devPostive = this.timeProcess + this.deviation;
+      const devNegative = ((this.timeProcess - this.deviation) < 0) ? 0 : (this.timeProcess - this.deviation);
 
-    return gen();
+      const gen = rn.generator({
+        min:  devNegative,
+        max:  devPostive
+      });
+
+      return gen();
+    }
     return time;
   }
 

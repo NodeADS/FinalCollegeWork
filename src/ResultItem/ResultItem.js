@@ -4,6 +4,7 @@ import AtendInfo from '../AtendInfo/AtendInfo';
 import moment from 'moment';
 import { Line } from 'react-chartjs';
 import groupArray from 'group-array';
+import util from '../Util';
 
 class ResultItem extends Component {
   constructor(props) {
@@ -51,41 +52,40 @@ class ResultItem extends Component {
     };
   }
 
-  createDataAtend() {
-
-    return {
-        labels: ['',''],
-        datasets: [{
-            'atendente 1': 10,
-            'atendente 2': 0,
-        },{
-            'atendente 1': 130,
-            'atendente 2': 60,
-        }]
+  getGraphs(item) {
+    const opts = {
+      responsive: true
     };
+
+    return (
+      <div>
+        <p><b>Gráficos</b></p>
+
+        <h6>Tamanho da fila</h6>
+        <Line data={this.createDataQueue(item.queueLogs)}  options={opts} />
+
+        <h6>Números de clientes que chegaram</h6>
+        <Line data={this.createDataArrival(item.clients)} options={opts} />
+      </div>
+    );
   }
 
   render() {
     const item = this.props.data;
 
-    // item.normaInfo.map(atend => {
-    //   console.log(atend.atend, atend.logs);
-    // });
-
-
-    const opts = {
-      responsive: true
-    };
     return (
       <Col s={6} m={6}>
         <Card title={`Gerado às ${moment(item.end).format("HH:mm:ss")}`}>
           <Row>
             <p><b>Parâmetros</b></p>
-            <Col s={6} m={6}>
+            <Col s={5} m={5}>
               <p>Atendentes Normais: {item.normalNumber}</p>
             </Col>
-            <Col s={6} m={6}>
+            <Col s={5} m={5}>
               <p>Atendentes Especializados: {item.topNumber}</p>
+            </Col>
+            <Col s={2} m={2}>
+              <p>Random: {item.random ? 'Sim' : 'Não'}</p>
             </Col>
           </Row>
           <Row>
@@ -114,20 +114,14 @@ class ResultItem extends Component {
               data={item.normaInfo}/>
           </Collapsible>
 
-          <p><b>Gráficos</b></p>
-
-          <h6>Tamanho da fila</h6>
-          <Line data={this.createDataQueue(item.queueLogs)}  options={opts} />
-
-          <h6>Números de clientes que chegaram</h6>
-          <Line data={this.createDataArrival(item.clients)} options={opts} />
-
-
+          {
+            this.props.showGraph
+            ? this.getGraphs(item) : null
+          }
         </Card>
       </Col>
     );
   }
 }
-// <h6>Teste</h6>
-// <Line data={this.createDataAtend(item.clients)} options={opts} />
+
 export default ResultItem;

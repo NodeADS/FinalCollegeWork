@@ -14,13 +14,17 @@ class Parameters extends Component {
       data: json,
       atendNormal: store.get('ATEND_NORMAL'),
       atendTop: store.get('ATEND_TOP'),
-      processing: false
+      processing: false,
+      random: true,
+      graph: false
     }
 
     this.dataChange = this.dataChange.bind(this);
     this.clickedBtn = this.clickedBtn.bind(this);
     this.atendNormalChange = this.atendNormalChange.bind(this);
     this.atendTopChange = this.atendTopChange.bind(this);
+    this.randomChange = this.randomChange.bind(this);
+    this.graphChange = this.graphChange.bind(this);
   }
 
   dataChange(e) {
@@ -49,6 +53,22 @@ class Parameters extends Component {
     this.setState({
       atendTop: e.target.value
     });
+  }
+
+  randomChange(e) {
+    this.setState({
+      random: e.target.checked
+    });
+
+    this.props.randomChange(e.target.checked);
+  }
+
+  graphChange(e) {
+    this.setState({
+      random: e.target.checked
+    });
+
+    this.props.graphChange(e.target.checked);
   }
 
   validNumber(n) {
@@ -121,28 +141,47 @@ class Parameters extends Component {
   render() {
     return (
       <Row>
-        <textarea
-          className='materialize-textarea'
-          placeholder='JSON'
-          value={this.state.text}
-          onChange={this.dataChange}></textarea>
+        <Row>
+          <textarea
+            className='materialize-textarea'
+            placeholder='JSON'
+            value={this.state.text}
+            onChange={this.dataChange}></textarea>
 
-        <Input s={6}
-          label="Atend. Normal"
-          defaultValue={this.state.atendNormal}
-          onChange={this.atendNormalChange} />
+          <Input s={5}
+            label="Atend. Normal"
+            defaultValue={this.state.atendNormal}
+            onChange={this.atendNormalChange} />
 
-          <Input s={6}
+          <Input s={5}
             label="Atend. Especializado"
             defaultValue={this.state.atendTop}
             onChange={this.atendTopChange} />
 
-          {
-            this.state.processing
-            ? <ProgressBar />
-            : <Button onClick={this.clickedBtn}>Processar</Button>
-          }
+          <Input s={2}
+            name='group1'
+            type='checkbox'
+            label='Random'
+            className='filled-in'
+            defaultChecked='checked'
+            onChange={this.randomChange} />
+
+          <Input s={2}
+            name='group1'
+            type='checkbox'
+            label='Graphs'
+            className='filled-in'
+            defaultChecked=''
+            onChange={this.graphChange} />
+
+        </Row>
+        {
+          this.state.processing
+          ? <ProgressBar />
+          : <Button onClick={this.clickedBtn}>Processar</Button>
+        }
       </Row>
+
     );
   }
 }
