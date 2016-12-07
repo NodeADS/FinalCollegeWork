@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 class Manager {
   constructor(executors, onCompleted) {
     this.executors = executors;
@@ -20,7 +22,7 @@ class Manager {
     } else {
       this.addQueue(client);
     }
-    this.addQuereLog();
+    this.addQueueLog();
   }
 
   doIt(client, exec) {
@@ -42,7 +44,7 @@ class Manager {
       if (newClient) {
         this.doIt(newClient, exec);
       }
-      this.addQuereLog();
+      this.addQueueLog();
     })
   }
 
@@ -65,10 +67,22 @@ class Manager {
     }
   }
 
-  addQuereLog() {
+  addQueueLog() {
+    const now = new Date();
+    const size = this.queue.length;
+
+    if (this.queueLogs.length > 0) {
+      const last = this.queueLogs[this.queueLogs.length - 1];
+
+      if (moment(last.date).format('mm:ss:SS') == moment(now).format('mm:ss:SS')) {
+        if (last.size < size) last.size = size;
+        return;
+      }
+    }
+
     this.queueLogs.push({
       date: new Date(),
-      size: this.queue.length
+      size
     });
   }
 

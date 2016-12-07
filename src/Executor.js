@@ -59,7 +59,8 @@ class Executor {
       return {
         atend: i,
         clients: item.logs.length,
-        busy: work / total
+        busy: work / total,
+        logs: item.logs
       };
     });
   }

@@ -11,6 +11,7 @@ class ResultItem extends Component {
   }
 
   createDataQueue(array) {
+
     const dates = array.map(x => ({
       date: moment(x.date).format('mm:ss:SS'),
       size: x.size
@@ -31,7 +32,6 @@ class ResultItem extends Component {
   }
 
   createDataArrival(array) {
-    console.log(array);
     const dates = array.map(x => ({
       date: moment(x.processDate).format('mm:ss:SS'),
       size: x.size
@@ -51,8 +51,27 @@ class ResultItem extends Component {
     };
   }
 
+  createDataAtend() {
+
+    return {
+        labels: ['',''],
+        datasets: [{
+            'atendente 1': 10,
+            'atendente 2': 0,
+        },{
+            'atendente 1': 130,
+            'atendente 2': 60,
+        }]
+    };
+  }
+
   render() {
     const item = this.props.data;
+
+    // item.normaInfo.map(atend => {
+    //   console.log(atend.atend, atend.logs);
+    // });
+
 
     const opts = {
       responsive: true
@@ -102,10 +121,13 @@ class ResultItem extends Component {
 
           <h6>Números de clientes que chegaram</h6>
           <Line data={this.createDataArrival(item.clients)} options={opts} />
+
+
         </Card>
       </Col>
     );
   }
 }
-
+// <h6>Teste</h6>
+// <Line data={this.createDataAtend(item.clients)} options={opts} />
 export default ResultItem;
